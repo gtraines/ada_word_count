@@ -15,9 +15,6 @@ then
 fi
 
 gnat make awordcount.adb
-gnat bind awordcount
-gnat compile awordcount
-gnat link awordcount
 chmod +x awordcount
 
 rm awordcount.ali

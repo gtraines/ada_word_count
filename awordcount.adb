@@ -14,43 +14,45 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 procedure awordcount is
 -- *** Variable declarations *** 
-    package SeqIO is new Ada.Sequential_IO(Element_Type => Character);
-    ArgsCount : Natural;
-    FileName : String( 1..Ada.Command_Line.Argument(1)'length);
-    FileNameLength : Natural;
-    SourceFile : SeqIO.File_Type;
 begin
     
     New_Line;
-    Put_Line(Item => Ada.Command_Line.Command_Name);
-    
-    ArgsCount := Ada.Command_Line.Argument_Count;
 
-    if ArgsCount = 0 then
+    if Ada.Command_Line.Argument_Count = 0 then
         Put_Line(Item => " ERROR! Filename required.");
         Put_Line(Item => " USAGE: awordcount file-to-get-counts-for.txt");
     else
-        Ada.Integer_Text_IO.Put(Item => ArgsCount);
-        New_Line;
-        Put(Item => "Parsing file: ");
-        FileNameLength := Ada.Command_Line.Argument(1)'length;
-        FileName := Ada.Command_Line.Argument(1);
-        Put_Line(Item => FileName);
-        Put_Line(Item => Ada.Command_Line.Argument(1));
+        declare
+            -- *** Variable declarations *** 
+            package SeqIO is new Ada.Sequential_IO(Element_Type => Character);
+            FileName : String(1..Ada.Command_Line.Argument(1)'length);
+            FileNameLength : Natural := Ada.Command_Line.Argument(1)'length;
+            SourceFile : SeqIO.File_Type;
+        begin
+            FileName := Ada.Command_Line.Argument(1);
+            Put(Item => "Parsing file: ");
+            Put_Line(Item => FileName);
+            
+            SeqIO.Open(SourceFile, SeqIO.In_File, FileName);
+            declare
+                C : Character;
+                CharacterCount : Integer := 0;
+                LineCount : Integer := 0;
+                WordCount : Integer := 0;
+            begin
+                while not SeqIO.End_Of_File(SourceFile)
+                loop
+                    SeqIO.Read(SourceFile, C);
+                    CharacterCount := CharacterCount + 1;
+                end loop;
+                Put(Item => "Characters: ");
+                Ada.Integer_Text_IO.Put(CharacterCount);
+            end;
+            SeqIO.Close(SourceFile);
+        end;
+
     end if;
-    -- IO.Open(SourceFile, IO.In_File, "textcounter.adb");
 
-    -- declare
-    --     C : Character;
-    -- begin
-    --     while not IO.End_Of_File(SourceFile)
-    --     loop
-    --         IO.Read(SourceFile, C);
-    --         Ada.Text_IO.Put(C);
-    --     end loop;
-    -- end;
-
-    -- IO.Close(SourceFile);
     New_Line;
 
 end awordcount;
