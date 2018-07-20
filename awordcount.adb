@@ -9,13 +9,15 @@
 with Ada.Command_Line;
 with Ada.Integer_Text_IO;
 with Ada.Sequential_IO;
+with Ada.Strings.Unbounded;
 with Ada.Text_IO; use Ada.Text_IO;
 
 procedure awordcount is
 -- *** Variable declarations *** 
     package SeqIO is new Ada.Sequential_IO(Element_Type => Character);
     ArgsCount : Natural;
-    FileName : String(1..256);
+    FileName : String( 1..Ada.Command_Line.Argument(1)'length);
+    FileNameLength : Natural;
     SourceFile : SeqIO.File_Type;
 begin
     
@@ -31,6 +33,9 @@ begin
         Ada.Integer_Text_IO.Put(Item => ArgsCount);
         New_Line;
         Put(Item => "Parsing file: ");
+        FileNameLength := Ada.Command_Line.Argument(1)'length;
+        FileName := Ada.Command_Line.Argument(1);
+        Put_Line(Item => FileName);
         Put_Line(Item => Ada.Command_Line.Argument(1));
     end if;
     -- IO.Open(SourceFile, IO.In_File, "textcounter.adb");
